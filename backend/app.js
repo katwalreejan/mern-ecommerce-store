@@ -1,7 +1,8 @@
 require("dotenv").config();
 const express = require("express");
 const app = express();
-
+const userRouter = require("./routes/userRouter");
+const { unknownEndpoint, errorHandler } = require("./middleware/customMiddleware");
 const connectDB = require("./config/db");
 const cors = require("cors");
 
@@ -11,11 +12,10 @@ app.use(express.json());
 
 connectDB();
 
+// Use the userRouter for all "/users" routes
+app.use("/api/users", userRouter);
 
-app.get("/", (req, res) => {
-  res.json({ message: "API is running..." });
-});
-// app.use(unknownEndpoint);
-// app.use(errorHandler);
+app.use(unknownEndpoint);
+app.use(errorHandler);
 
 module.exports = app;
